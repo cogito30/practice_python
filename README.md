@@ -9,6 +9,10 @@
 - Class: class, def __init__(), def __del__()
 - import-as
 
+## Projects
+- [ToDoList](./to_do_list/)
+- []()
+
 ## Environment
 - install miniconda
 ```bash
@@ -40,6 +44,9 @@ conda list
 
 ## Reference
 - [Python 3.13](https://docs.python.org/3/)
+- [argparse](https://docs.python.org/3/library/argparse.html)
+- [datetime](https://docs.python.org/3/library/datetime.html)
+- [os](https://docs.python.org/ko/3.13/library/os.html)
 - [Tkinter](https://docs.python.org/ko/3.13/library/tkinter.html)
 - [PyQt6](https://www.riverbankcomputing.com/software/pyqt/intro)
 - [PyGame](https://www.pygame.org/news)
