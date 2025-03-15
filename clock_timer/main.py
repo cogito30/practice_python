@@ -21,8 +21,12 @@ class ClockAlarmTimerApp(QWidget):
         self.current_time_label = QLabel('', self)
         layout.addWidget(self.current_time_label)
         
-        # 알람 리스트 초기화
-        self.alarm_list = QListWidget(self)
+        self.clock_timer = QTimer(self)
+        self.clock_timer.timeout.connect(self.update_current_time)
+        self.clock_timer.start(1000)
+        
+        # 알람 설정
+        self.alarm_list = QListWidget(self)  # 초기화 추가
         layout.addWidget(self.alarm_list)
         
         self.alarm_time_edit = QTimeEdit(self)
@@ -44,6 +48,9 @@ class ClockAlarmTimerApp(QWidget):
         self.timer.timeout.connect(self.update_timer)
         self.remaining_time = 0
         
+        self.timer_time_edit = QTimeEdit(self)
+        layout.addWidget(self.timer_time_edit)
+        
         self.start_timer_button = QPushButton('타이머 시작', self)
         self.start_timer_button.clicked.connect(self.start_timer)
         layout.addWidget(self.start_timer_button)
@@ -52,20 +59,39 @@ class ClockAlarmTimerApp(QWidget):
         self.stop_timer_button.clicked.connect(self.stop_timer)
         layout.addWidget(self.stop_timer_button)
         
+        self.reset_timer_button = QPushButton('타이머 초기화', self)
+        self.reset_timer_button.clicked.connect(self.reset_timer)
+        layout.addWidget(self.reset_timer_button)
+        
+        # 스톱워치 추가
+        self.stopwatch_label = QLabel('스톱워치: 00:00.000', self)
+        layout.addWidget(self.stopwatch_label)
+        
+        self.stopwatch_timer = QTimer(self)
+        self.stopwatch_timer.timeout.connect(self.update_stopwatch)
+        self.elapsed_time = 0
+        
+        self.start_stopwatch_button = QPushButton('스톱워치 시작', self)
+        self.start_stopwatch_button.clicked.connect(self.start_stopwatch)
+        layout.addWidget(self.start_stopwatch_button)
+        
+        self.stop_stopwatch_button = QPushButton('스톱워치 정지', self)
+        self.stop_stopwatch_button.clicked.connect(self.stop_stopwatch)
+        layout.addWidget(self.stop_stopwatch_button)
+        
+        self.reset_stopwatch_button = QPushButton('스톱워치 초기화', self)
+        self.reset_stopwatch_button.clicked.connect(self.reset_stopwatch)
+        layout.addWidget(self.reset_stopwatch_button)
+        
         self.setLayout(layout)
-
-        # 현재 시간 업데이트
+        
         self.update_current_time()
-        self.clock_timer = QTimer(self)
-        self.clock_timer.timeout.connect(self.update_current_time)
-        self.clock_timer.start(1000)
     
     def update_current_time(self):
         """ 현재 시간을 업데이트 """
         current_time = datetime.datetime.now().strftime('%H:%M:%S')
         self.current_time_label.setText(f'현재 시간: {current_time}')
-        if hasattr(self, 'alarm_list'):  # self.alarm_list가 존재하는지 확인
-            self.check_alarms()
+        self.check_alarms()
     
     def add_alarm(self):
         """ 알람 추가 """
@@ -89,7 +115,8 @@ class ClockAlarmTimerApp(QWidget):
     
     def start_timer(self):
         """ 타이머 시작 """
-        self.remaining_time = 60  # 기본 1분 타이머 설정
+        time = self.timer_time_edit.time()
+        self.remaining_time = time.minute() * 60 + time.second()
         self.timer.start(1000)
     
     def update_timer(self):
@@ -105,8 +132,32 @@ class ClockAlarmTimerApp(QWidget):
     def stop_timer(self):
         """ 타이머 정지 """
         self.timer.stop()
+    
+    def reset_timer(self):
+        """ 타이머 초기화 """
+        self.timer.stop()
         self.timer_label.setText('타이머: 00:00')
         self.remaining_time = 0
+    
+    def start_stopwatch(self):
+        """ 스톱워치 시작 """
+        self.stopwatch_timer.start(10)
+    
+    def update_stopwatch(self):
+        """ 스톱워치 시간 업데이트 """
+        self.elapsed_time += 10
+        minutes, milliseconds = divmod(self.elapsed_time, 60000)
+        seconds, milliseconds = divmod(milliseconds, 1000)
+        self.stopwatch_label.setText(f'스톱워치: {minutes:02}:{seconds:02}.{milliseconds:03}')
+    
+    def stop_stopwatch(self):
+        """ 스톱워치 정지 """
+        self.stopwatch_timer.stop()
+    
+    def reset_stopwatch(self):
+        """ 스톱워치 초기화 """
+        self.elapsed_time = 0
+        self.stopwatch_label.setText('스톱워치: 00:00.000')
     
 if __name__ == '__main__':
     app = QApplication(sys.argv)
