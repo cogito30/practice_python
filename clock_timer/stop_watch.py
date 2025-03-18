@@ -1,7 +1,7 @@
 import sys
 import datetime
 from PyQt6.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QLabel, QPushButton
+    QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
 )
 from PyQt6.QtCore import QTimer, Qt
 from PyQt6.QtGui import QFont
@@ -15,22 +15,30 @@ class StopwatchApp(QWidget):
         """ GUI 초기화 및 위젯 배치 """
         self.setWindowTitle('Stopwatch')
         self.setGeometry(100, 100, 400, 300)
+        # self.setFixedSize(400, 300)  # 창 크기 고정
         
         layout = QVBoxLayout()
+        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)  # 전체 레이아웃을 중앙 정렬
         
-        # 스톱워치 숫자 라벨 (초/분)
+        time_layout = QHBoxLayout()
+        time_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)  # 시, 분, 초 라벨 중앙 정렬
+        
+        # 시, 분, 초 라벨 (크기 동일하게 설정)
         self.stopwatch_label = QLabel('00:00', self)
-        self.stopwatch_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.stopwatch_label.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.stopwatch_label.setFont(QFont("Courier", 36, QFont.Weight.Bold))
         self.stopwatch_label.setFixedWidth(200)
-        layout.addWidget(self.stopwatch_label)
+        time_layout.addWidget(self.stopwatch_label)
         
-        # 밀리초 라벨
+        # 밀리초 라벨 (크기 동일하게 설정, 좌측으로 이동)
         self.millisecond_label = QLabel('.000', self)
-        self.millisecond_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.millisecond_label.setFont(QFont("Courier", 24, QFont.Weight.Bold))
+        self.millisecond_label.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.millisecond_label.setFont(QFont("Courier", 36, QFont.Weight.Bold))
         self.millisecond_label.setFixedWidth(80)
-        layout.addWidget(self.millisecond_label)
+        self.millisecond_label.setContentsMargins(-20, 0, 0, 0)  # 좌측으로 이동
+        time_layout.addWidget(self.millisecond_label)
+        
+        layout.addLayout(time_layout)
         
         # 스톱워치 타이머
         self.stopwatch_timer = QTimer(self)
@@ -41,12 +49,12 @@ class StopwatchApp(QWidget):
         # 시작/일시정지 버튼
         self.toggle_button = QPushButton('시작', self)
         self.toggle_button.clicked.connect(self.toggle_stopwatch)
-        layout.addWidget(self.toggle_button)
+        layout.addWidget(self.toggle_button, alignment=Qt.AlignmentFlag.AlignCenter)
         
         # 초기화 버튼
         self.reset_button = QPushButton('초기화', self)
         self.reset_button.clicked.connect(self.reset_stopwatch)
-        layout.addWidget(self.reset_button)
+        layout.addWidget(self.reset_button, alignment=Qt.AlignmentFlag.AlignCenter)
         
         self.setLayout(layout)
         
