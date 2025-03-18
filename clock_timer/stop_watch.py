@@ -14,8 +14,7 @@ class StopwatchApp(QWidget):
     def init_ui(self):
         """ GUI 초기화 및 위젯 배치 """
         self.setWindowTitle('Stopwatch')
-        self.setGeometry(100, 100, 400, 300)
-        # self.setFixedSize(400, 300)  # 창 크기 고정
+        self.setGeometry(100, 100, 600, 400)
         
         layout = QVBoxLayout()
         layout.setAlignment(Qt.AlignmentFlag.AlignCenter)  # 전체 레이아웃을 중앙 정렬
@@ -23,19 +22,19 @@ class StopwatchApp(QWidget):
         time_layout = QHBoxLayout()
         time_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)  # 시, 분, 초 라벨 중앙 정렬
         
-        # 시, 분, 초 라벨 (크기 동일하게 설정)
+        # 시, 분, 초 라벨 (창 크기에 따라 폰트 크기 조정)
         self.stopwatch_label = QLabel('00:00', self)
         self.stopwatch_label.setAlignment(Qt.AlignmentFlag.AlignRight)
-        self.stopwatch_label.setFont(QFont("Courier", 36, QFont.Weight.Bold))
-        self.stopwatch_label.setFixedWidth(200)
+        self.stopwatch_label.setFont(QFont("Courier", 48, QFont.Weight.Bold))
+        self.stopwatch_label.setFixedWidth(250)
         time_layout.addWidget(self.stopwatch_label)
         
-        # 밀리초 라벨 (크기 동일하게 설정, 좌측으로 이동)
+        # 밀리초 라벨 (창 크기에 따라 폰트 크기 조정, 좌측으로 이동)
         self.millisecond_label = QLabel('.000', self)
         self.millisecond_label.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        self.millisecond_label.setFont(QFont("Courier", 36, QFont.Weight.Bold))
-        self.millisecond_label.setFixedWidth(80)
-        self.millisecond_label.setContentsMargins(-20, 0, 0, 0)  # 좌측으로 이동
+        self.millisecond_label.setFont(QFont("Courier", 48, QFont.Weight.Bold))
+        self.millisecond_label.setFixedWidth(100)
+        self.millisecond_label.setContentsMargins(-30, 0, 0, 0)  # 좌측으로 이동
         time_layout.addWidget(self.millisecond_label)
         
         layout.addLayout(time_layout)
@@ -46,16 +45,22 @@ class StopwatchApp(QWidget):
         self.elapsed_time = 0
         self.running = False
         
+        button_layout = QVBoxLayout()
+        button_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        
         # 시작/일시정지 버튼
         self.toggle_button = QPushButton('시작', self)
+        self.toggle_button.setFont(QFont("Arial", 16))
         self.toggle_button.clicked.connect(self.toggle_stopwatch)
-        layout.addWidget(self.toggle_button, alignment=Qt.AlignmentFlag.AlignCenter)
+        button_layout.addWidget(self.toggle_button, alignment=Qt.AlignmentFlag.AlignCenter)
         
         # 초기화 버튼
         self.reset_button = QPushButton('초기화', self)
+        self.reset_button.setFont(QFont("Arial", 16))
         self.reset_button.clicked.connect(self.reset_stopwatch)
-        layout.addWidget(self.reset_button, alignment=Qt.AlignmentFlag.AlignCenter)
+        button_layout.addWidget(self.reset_button, alignment=Qt.AlignmentFlag.AlignCenter)
         
+        layout.addLayout(button_layout)
         self.setLayout(layout)
         
     def toggle_stopwatch(self):
